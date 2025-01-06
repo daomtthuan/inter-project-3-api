@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, HttpStatus, Post, Request, UnauthorizedException } from '@nestjs/common';
+import { ClassSerializerInterceptor, Controller, Get, HttpCode, HttpStatus, Post, Request, UnauthorizedException, UseInterceptors } from '@nestjs/common';
 import { Except } from 'type-fest';
 
 import { RequestTypeWithUser } from '~/types/http';
@@ -11,6 +11,7 @@ import { LocalAuthOnly } from './decorators/_auth.decorator';
 
 /** Auth controller. */
 @JwtAuth()
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -46,8 +47,6 @@ export class AuthController {
    */
   @Get('profile')
   async getProfile(@Request() req: RequestTypeWithUser): Promise<Except<User, 'password'>> {
-    const { password, ...userWithoutPassword } = req.user;
-
-    return userWithoutPassword as User;
+    return req.user;
   }
 }

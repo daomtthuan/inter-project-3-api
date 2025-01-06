@@ -1,11 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { RequestTypeWithUser } from '~/types/http';
 import { EnvUtils } from '~/utils/core';
 import { PasswordUtils } from '~/utils/secure';
 
-import { User, UserService } from '../entities';
+import { User } from '../entities';
 import { JwtPayload, JwtToken } from './_.service.type';
 
 /** Auth service. */
@@ -17,8 +19,10 @@ export class AuthService {
   constructor(
     /** JWT service. */
     private jwtService: JwtService,
-    /** Users service. */
-    private usersService: UserService,
+
+    /** User repository. */
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   /**
@@ -30,7 +34,15 @@ export class AuthService {
    * @returns `User` if valid, otherwise `null`.
    */
   async validateUser(username: string, password: string): Promise<User | null> {
-    const user = await this.usersService.findOneByUsername(username);
+    const user = await this.userRepository.findOne({
+      where: {
+        username,
+        isActive: true,
+      },
+      relations: {
+        roles: true,
+      },
+    });
     if (!user) {
       this.logger.debug('User not found');
       return null;
@@ -65,14 +77,18 @@ export class AuthService {
       return null;
     }
 
-    const user = await this.usersService.findOneByUsername(payload['username']);
+    const user = await this.userRepository.findOne({
+      where: {
+        id: Number(payload['sub']),
+        username: payload['username'],
+        isActive: true,
+      },
+      relations: {
+        roles: true,
+      },
+    });
     if (!user) {
       this.logger.debug('User not found');
-      return null;
-    }
-
-    if (user.id.toString() !== payload['sub']) {
-      this.logger.debug('Mismatch user id');
       return null;
     }
 

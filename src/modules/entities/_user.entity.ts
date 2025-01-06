@@ -1,7 +1,8 @@
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { BaseEntity } from '../_base.entity';
-import { Role } from '../role/_.entity';
+import { BaseEntity } from './_base.entity';
+import { Role } from './_role.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -9,11 +10,12 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  /** Username of the user. */
+  /** Username of the account. */
   @Column({ unique: true })
   username!: string;
 
-  /** Password of the user. */
+  /** Password of the account. */
+  @Exclude()
   @Column()
   password!: string;
 
@@ -29,11 +31,14 @@ export class User extends BaseEntity {
   @Column({ default: true })
   isActive!: boolean;
 
+  /** Roles of the user. */
   @ManyToMany(() => Role)
   @JoinTable()
+  @Transform(({ value }) => value.map((role: Role) => role.name))
   roles!: Role[];
 
   /** @returns Full name of the user. */
+  @Expose()
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
