@@ -3,8 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 
 import { RequestTypeWithUser } from '~/types/http';
 import { EnvUtils } from '~/utils/core';
+import { PasswordUtils } from '~/utils/secure';
 
-import { User, UsersService } from '../entities';
+import { User, UserService } from '../entities';
 import { JwtPayload, JwtToken } from './_.service.type';
 
 /** Auth service. */
@@ -17,7 +18,7 @@ export class AuthService {
     /** JWT service. */
     private jwtService: JwtService,
     /** Users service. */
-    private usersService: UsersService,
+    private usersService: UserService,
   ) {}
 
   /**
@@ -35,7 +36,7 @@ export class AuthService {
       return null;
     }
 
-    if (user.password !== password) {
+    if (!(await PasswordUtils.verify(password, user.password))) {
       this.logger.debug('Invalid password');
       return null;
     }

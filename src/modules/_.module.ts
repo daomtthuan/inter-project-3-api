@@ -7,7 +7,7 @@ import { DatabaseModule } from './database';
 import { UserModule } from './entities/user/_.module';
 
 @Module({
-  imports: [ConfigModule, DatabaseModule, AuthModule, UserModule],
+  imports: [ConfigModule, DatabaseModule, UserModule, AuthModule],
   controllers: [AppController],
 })
 export class AppModule {}

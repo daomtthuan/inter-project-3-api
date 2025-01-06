@@ -99,7 +99,7 @@ export class Initialization1736111338015 implements MigrationInterface {
       },
       {
         username: 'user',
-        password: PasswordUtils.hash('User@123'),
+        password: await PasswordUtils.hash('User@123'),
         firstName: 'User',
       },
     ]);
