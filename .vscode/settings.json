@@ -1,0 +1,172 @@
+{
+  "cSpell.words": ["nestjs"],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.js": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.mjs": "${capture}.js.map, ${capture}.min.js, ${capture}.d.ts",
+    "*.jsx": "${capture}.js",
+    "*.ts": "${capture}.js, ${capture}.type.ts",
+    "*.tsx": "${capture}.ts",
+    "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, .editorconfig, .gitignore, tsconfig.*, eslint.config.*, prettier.config.*, nodemon.*, jest.config.*",
+    "tsconfig.json": "tsconfig.*.json",
+    "next.config.ts": "next-env.d.ts"
+  },
+  "jest.runMode": "on-demand",
+  "material-icon-theme.folders.theme": "specific",
+  "material-icon-theme.activeIconPack": "nest",
+  "material-icon-theme.files.customClones": [
+    {
+      "name": "module",
+      "base": "typescript",
+      "color": "#D13E3C",
+      "fileExtensions": ["module.ts"]
+    },
+    {
+      "name": "controller",
+      "base": "typescript",
+      "color": "#81B1DE",
+      "fileExtensions": ["controller.ts"]
+    },
+    {
+      "name": "service",
+      "base": "typescript",
+      "color": "#F5C842",
+      "fileExtensions": ["service.ts"]
+    },
+    {
+      "name": "guard",
+      "base": "typescript",
+      "color": "#5C9E4C",
+      "fileExtensions": ["guard.ts"]
+    },
+    {
+      "name": "decorator",
+      "base": "typescript",
+      "color": "#9F4FB9",
+      "fileExtensions": ["decorator.ts"]
+    },
+    {
+      "name": "middleware",
+      "base": "typescript",
+      "color": "#626EBD",
+      "fileExtensions": ["middleware.ts"]
+    },
+    {
+      "name": "entity",
+      "base": "typescript",
+      "color": "#FFA07A",
+      "fileExtensions": ["entity.ts"]
+    },
+    {
+      "name": "dto",
+      "base": "typescript",
+      "color": "#757575",
+      "fileExtensions": ["dto.ts"]
+    },
+    {
+      "name": "config",
+      "base": "typescript",
+      "color": "#50ACBF",
+      "fileExtensions": ["config.ts"]
+    },
+    {
+      "name": "factory",
+      "base": "typescript",
+      "color": "#9FA971",
+      "fileExtensions": ["factory.ts"]
+    },
+    {
+      "name": "strategy",
+      "base": "typescript",
+      "color": "#EBA73B",
+      "fileExtensions": ["strategy.ts"]
+    },
+    {
+      "name": "constant",
+      "base": "typescript",
+      "color": "#677D8A",
+      "fileExtensions": ["constant.ts"]
+    },
+    {
+      "name": "ts-type",
+      "base": "typescript-def",
+      "color": "#428ACE",
+      "fileExtensions": ["type.ts"]
+    },
+    {
+      "name": "main",
+      "base": "typescript",
+      "color": "#FAFAFA",
+      "fileNames": ["main.ts"]
+    },
+    {
+      "name": "entry",
+      "base": "typescript-def",
+      "color": "#FAFAFA",
+      "fileNames": ["index.ts"]
+    }
+  ],
+  "material-icon-theme.folders.customClones": [
+    {
+      "name": "factory",
+      "base": "class",
+      "color": "#9FA971",
+      "folderNames": ["factories"]
+    },
+    {
+      "name": "http",
+      "base": "public",
+      "color": "#FF8C00",
+      "folderNames": ["http"]
+    },
+    {
+      "name": "entity",
+      "base": "class",
+      "color": "#FFA07A",
+      "folderNames": ["entities", "entity"]
+    },
+    {
+      "name": "logger",
+      "base": "log",
+      "color": "#AFB23C",
+      "folderNames": ["logger"]
+    },
+    {
+      "name": "dto",
+      "base": "class",
+      "color": "#757575",
+      "folderNames": ["dto"]
+    },
+    {
+      "name": "declaration",
+      "base": "typescript",
+      "color": "#428ACE",
+      "folderNames": ["declarations"]
+    },
+    {
+      "name": "strategy",
+      "base": "guard",
+      "color": "#EBA73B",
+      "folderNames": ["strategies"]
+    },
+    {
+      "name": "postgres",
+      "base": "database",
+      "color": "#43688F",
+      "folderNames": ["postgres"]
+    },
+    {
+      "name": "migration",
+      "base": "database",
+      "color": "#5A6E79",
+      "folderNames": ["migrations"]
+    }
+  ],
+  "search.exclude": {
+    "**/*.code-search": true,
+    "**/bower_components": true,
+    "**/dist": true,
+    "**/node_modules": true
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib"
+}
