@@ -12,6 +12,9 @@ export type RequestType<TUser = undefined, TAuthInfo = undefined> = Express.Requ
 
   /** Authentication information. */
   authInfo: TAuthInfo;
+
+  /** Request headers. */
+  headers?: Record<string, unknown>;
 };
 
 /**
@@ -19,4 +22,4 @@ export type RequestType<TUser = undefined, TAuthInfo = undefined> = Express.Requ
  *
  * @template TAuthInfo Authentication information type.
  */
-export type RequestTypeWithUser<TAuthInfo = undefined> = RequestType<User, TAuthInfo>;
+export type RequestTypeWithUser = RequestType<User, Record<string, unknown>>;

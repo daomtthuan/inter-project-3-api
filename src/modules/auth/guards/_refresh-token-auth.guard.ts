@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 
 import { User } from '~/modules/entities';
 
-import { JWT_AUTH_GUARD, LOCAL_ONLY_AUTH_GUARD, PUBLIC_GUARD } from '../_.constant';
+import { PUBLIC_GUARD, REFRESH_TOKEN_GUARD } from '../_.constant';
 
-/** JWT auth guard. */
+/** RefreshToken auth guard. */
 @Injectable()
-export class JwtAuthGuard extends AuthGuard(JWT_AUTH_GUARD) implements IAuthGuard {
-  private logger = new Logger(JwtAuthGuard.name);
+export class RefreshTokenAuthGuard extends AuthGuard(REFRESH_TOKEN_GUARD) implements IAuthGuard {
+  private logger = new Logger(RefreshTokenAuthGuard.name);
 
   constructor(
     /** Reflector. */
@@ -19,19 +19,12 @@ export class JwtAuthGuard extends AuthGuard(JWT_AUTH_GUARD) implements IAuthGuar
     super();
   }
 
-  override canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  override canActivate(context: ExecutionContext): boolean | Observable<boolean> | Promise<boolean> {
     const targets = [context.getHandler(), context.getClass()];
 
     const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_GUARD, targets);
     if (isPublic) {
       this.logger.debug(`Skip cause route has ${PUBLIC_GUARD}`);
-
-      return true;
-    }
-
-    const isLocalAuthOnly = this.reflector.getAllAndOverride<boolean>(LOCAL_ONLY_AUTH_GUARD, targets);
-    if (isLocalAuthOnly) {
-      this.logger.debug(`Skip cause route has ${LOCAL_ONLY_AUTH_GUARD}`);
 
       return true;
     }

@@ -1,2 +1,2 @@
-export { JwtAuth, LocalAuth } from './_auth.decorator';
-export { Public } from './_guard.decorator';
+export * from './_auth.decorator';
+export * from './_guard.decorator';

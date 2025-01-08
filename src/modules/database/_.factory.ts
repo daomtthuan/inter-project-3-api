@@ -5,9 +5,10 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 import { EnvUtils } from '~/utils/core';
 import { PathUtils } from '~/utils/core/_path';
 
-import { Role, User } from '../entities';
+import * as entities from '../entities';
+import { MIGRATIONS_TABLE } from './_.constant';
 import { DatabaseModule } from './_.module';
-import { Initialization1736111338015 } from './migrations/1736111338015-initialization';
+import * as migrations from './migrations';
 
 /** Database factory. */
 export const DatabaseFactory = registerAs('DATABASE', (): SqliteConnectionOptions => {
@@ -24,11 +25,8 @@ export const DatabaseFactory = registerAs('DATABASE', (): SqliteConnectionOption
     database,
     entities,
     migrations,
+    migrationsTableName: MIGRATIONS_TABLE.name,
     migrationsRun: true,
     logging: true,
   };
 });
-
-const entities = [User, Role];
-
-const migrations = [Initialization1736111338015];

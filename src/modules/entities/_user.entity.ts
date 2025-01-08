@@ -1,14 +1,15 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from './_base.entity';
 import { Role } from './_role.entity';
+import { Session } from './_session.entity';
 
 @Entity()
 export class User extends BaseEntity {
   /** ID of the user. */
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
 
   /** Username of the account. */
   @Column({ unique: true })
@@ -36,6 +37,11 @@ export class User extends BaseEntity {
   @JoinTable()
   @Transform(({ value }) => value.map((role: Role) => role.name))
   roles!: Role[];
+
+  /** Sessions of the user. */
+  @Exclude()
+  @OneToMany(() => Session, (session) => session.user)
+  sessions!: Session[];
 
   /** @returns Full name of the user. */
   @Expose()

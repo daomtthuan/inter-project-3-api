@@ -26,4 +26,13 @@ export class PasswordUtils {
   static async verify(password: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   }
+
+  /**
+   * Generate a salt.
+   *
+   * @returns Salt.
+   */
+  static async generateSalt(): Promise<string> {
+    return bcrypt.genSalt(this.SALT_ROUNDS);
+  }
 }
