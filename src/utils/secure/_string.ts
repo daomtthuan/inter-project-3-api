@@ -44,7 +44,7 @@ export class SecureStringUtils {
       throw new Error('Invalid encrypted text.');
     }
 
-    const decipher = crypto.createDecipheriv(this.ENCRYPTION_ALGORITHM, key, iv);
+    const decipher = crypto.createDecipheriv(this.ENCRYPTION_ALGORITHM, Buffer.from(key), Buffer.from(iv));
     const decrypted = decipher.update(encrypted, 'base64', 'utf8');
 
     return `${decrypted}${decipher.final('utf8')}`;

@@ -24,6 +24,6 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, REFRESH_TOK
   }
 
   async validate(payload: unknown): Promise<User | null> {
-    return this.authService.validateJwtPayload(payload);
+    return this.authService.validateJwtPayload(payload, true);
   }
 }

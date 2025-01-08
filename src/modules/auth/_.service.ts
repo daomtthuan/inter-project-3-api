@@ -132,8 +132,7 @@ export class AuthService {
         return null;
       }
 
-      const token = SecureStringUtils.decrypt(payload['token']);
-      if (!(await PasswordUtils.verify(session.refreshToken, token))) {
+      if (!(await PasswordUtils.verify(session.refreshToken, payload['token']))) {
         this.logger.debug('Invalid RefreshToken');
         return null;
       }
@@ -187,7 +186,7 @@ export class AuthService {
       this.jwtService.signAsync(
         {
           ...payload,
-          token: SecureStringUtils.encrypt(await PasswordUtils.hash(token)),
+          token: await PasswordUtils.hash(token),
         },
         {
           expiresIn: EnvUtils.getString('JWT_REFRESH_TOKEN_EXPIRED'),
