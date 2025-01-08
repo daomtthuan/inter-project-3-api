@@ -82,7 +82,7 @@ export class AuthService {
 
     // Access token
     if (!isRefreshToken) {
-      if (!('token' in payload) || typeof payload['token'] !== 'string') {
+      if ('token' in payload) {
         this.logger.debug('Invalid AccessToken JWT payload');
         return null;
       }
