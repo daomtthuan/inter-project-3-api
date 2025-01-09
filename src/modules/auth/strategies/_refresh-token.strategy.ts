@@ -6,15 +6,15 @@ import { User } from '~/modules/entities';
 import { RequestTypeWithUser } from '~/types/http';
 import { EnvUtils } from '~/utils/core';
 
-import { REFRESH_TOKEN_GUARD } from '../_.constant';
-import { AuthService } from '../_.service';
+import { REFRESH_TOKEN_GUARD } from '../constants';
+import { TokenAuthService } from '../services';
 
 /** RefreshToken authentication strategy. */
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(Strategy, REFRESH_TOKEN_GUARD) implements Strategy {
   constructor(
-    /** Auth service. */
-    private authService: AuthService,
+    /** TokenAuth service. */
+    private tokenAuthService: TokenAuthService,
   ) {
     super({
       passReqToCallback: true,
@@ -26,6 +26,6 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, REFRESH_TOK
   }
 
   async validate(req: RequestTypeWithUser, payload: unknown): Promise<User | null> {
-    return this.authService.validateJwtPayload(req, payload);
+    return this.tokenAuthService.validateJwtPayload(req, payload);
   }
 }

@@ -2,8 +2,7 @@ import { Logger } from '@nestjs/common';
 import { registerAs } from '@nestjs/config';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions.js';
 
-import { EnvUtils } from '~/utils/core';
-import { PathUtils } from '~/utils/core/_path';
+import { EnvUtils, PathUtils } from '~/utils/core';
 
 import * as entities from '../entities';
 import { MIGRATIONS_TABLE } from './_.constant';

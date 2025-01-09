@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 
 import { User } from '~/modules/entities';
 
-import { PUBLIC_GUARD, REFRESH_TOKEN_GUARD } from '../_.constant';
+import { PUBLIC_GUARD, REFRESH_TOKEN_GUARD } from '../constants';
 
 /** RefreshToken auth guard. */
 @Injectable()
-export class RefreshTokenAuthGuard extends AuthGuard(REFRESH_TOKEN_GUARD) implements IAuthGuard {
-  private logger = new Logger(RefreshTokenAuthGuard.name);
+export class RefreshTokenGuard extends AuthGuard(REFRESH_TOKEN_GUARD) implements IAuthGuard {
+  private logger = new Logger(RefreshTokenGuard.name);
 
   constructor(
     /** Reflector. */

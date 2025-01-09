@@ -1,18 +1,17 @@
-import { ClassSerializerInterceptor, Controller, Post, Request, UnauthorizedException, UseInterceptors } from '@nestjs/common';
+import { Post, Request, UnauthorizedException } from '@nestjs/common';
 
 import { RequestTypeWithUser } from '~/types/http';
 
-import { AuthService } from '../_.service';
-import { JwtAuth, LocalAuth } from '../decorators';
+import { Auth, AuthController, LocalAuth } from '../decorators';
 import { TokenModel } from '../models';
+import { TokenAuthService } from '../services';
 
 /** Auth controller. */
-@UseInterceptors(ClassSerializerInterceptor)
-@Controller('auth/token')
+@AuthController('token')
 export class TokenAuthController {
   constructor(
-    /** Auth service. */
-    private auth: AuthService,
+    /** TokenAuth service. */
+    private tokenAuthService: TokenAuthService,
   ) {}
 
   /**
@@ -25,7 +24,7 @@ export class TokenAuthController {
   @LocalAuth()
   @Post()
   async getAccessToken(@Request() req: RequestTypeWithUser): Promise<TokenModel> {
-    const token = await this.auth.createToken(req);
+    const token = await this.tokenAuthService.createToken(req);
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -40,10 +39,10 @@ export class TokenAuthController {
    *
    * @returns Token.
    */
-  @JwtAuth('refresh')
+  @Auth('refresh')
   @Post('refresh')
   async refreshToken(@Request() req: RequestTypeWithUser): Promise<TokenModel> {
-    const token = await this.auth.createToken(req);
+    const token = await this.tokenAuthService.createToken(req);
     if (!token) {
       throw new UnauthorizedException();
     }

@@ -1,15 +1,14 @@
-import { ClassSerializerInterceptor, Controller, Get, Request, UseInterceptors } from '@nestjs/common';
+import { Get, Request } from '@nestjs/common';
 import { Except } from 'type-fest';
 
 import { User } from '~/modules/entities';
 import { RequestTypeWithUser } from '~/types/http';
 
-import { JwtAuth } from '../decorators';
+import { Auth, AuthController } from '../decorators';
 
 /** Auth controller. */
-@JwtAuth()
-@UseInterceptors(ClassSerializerInterceptor)
-@Controller('auth/profile')
+@Auth()
+@AuthController('profile')
 export class ProfileAuthController {
   /**
    * Get user profile.

@@ -1,3 +1,3 @@
-export * from './_access-token-auth.guard';
-export * from './_local-auth.guard';
-export * from './_refresh-token-auth.guard';
+export * from './_access-token.guard';
+export * from './_local.guard';
+export * from './_refresh-token.guard';

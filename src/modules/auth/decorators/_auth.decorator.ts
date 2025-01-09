@@ -1,14 +1,14 @@
 import { UseGuards } from '@nestjs/common';
 
-import { LocalAuthGuard } from '../guards';
-import { AccessTokenAuthGuard } from '../guards/_access-token-auth.guard';
-import { RefreshTokenAuthGuard } from '../guards/_refresh-token-auth.guard';
+import { LocalGuard } from '../guards';
+import { AccessTokenGuard } from '../guards/_access-token.guard';
+import { RefreshTokenGuard } from '../guards/_refresh-token.guard';
 import { PayloadModel } from '../models';
 
 /** Decorator to protect a route with local authentication. */
-export const LocalAuth = () => UseGuards(LocalAuthGuard);
+export const LocalAuth = () => UseGuards(LocalGuard);
 
 /** Decorator to protect a route with jwt authentication. */
-export const JwtAuth = (type: PayloadModel['type'] = 'access') => {
-  return type === 'access' ? UseGuards(AccessTokenAuthGuard) : UseGuards(RefreshTokenAuthGuard);
+export const Auth = (type: PayloadModel['type'] = 'access') => {
+  return type === 'access' ? UseGuards(AccessTokenGuard) : UseGuards(RefreshTokenGuard);
 };

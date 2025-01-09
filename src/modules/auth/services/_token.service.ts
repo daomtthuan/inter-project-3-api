@@ -4,18 +4,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Except } from 'type-fest';
 import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
 
+import { Session, User } from '~/modules/entities';
 import { RequestTypeWithUser } from '~/types/http';
 import { EnvUtils, ObjectUtils, ValueUtils } from '~/utils/core';
 import { PasswordUtils, SecureStringUtils } from '~/utils/secure';
 
-import { Session, User } from '../entities';
-import { PayloadModel, TokenModel, UserModel } from './models';
+import { PayloadModel, TokenModel } from '../models';
 
-/** Auth service. */
+/** TokenAuth service. */
 @Injectable()
-export class AuthService {
+export class TokenAuthService {
   /** Logger. */
-  private logger = new Logger(AuthService.name);
+  private logger = new Logger(TokenAuthService.name);
 
   constructor(
     /** JWT service. */
@@ -29,43 +29,6 @@ export class AuthService {
     @InjectRepository(Session)
     private sessionRepository: Repository<Session>,
   ) {}
-
-  /**
-   * Validate user.
-   *
-   * @param usernameDto Username.
-   * @param passwordDto Password.
-   *
-   * @returns `User` if valid, otherwise `null`.
-   */
-  async validateUser(usernameDto: unknown, passwordDto: unknown): Promise<User | null> {
-    const userModel = await ObjectUtils.createInstance(UserModel, { username: usernameDto, password: passwordDto });
-    if (!userModel) {
-      this.logger.debug('Invalid user model');
-      return null;
-    }
-
-    const user = await this.userRepository.findOne({
-      where: {
-        username: userModel.username,
-        isActive: true,
-      },
-      relations: {
-        roles: true,
-      },
-    });
-    if (!user) {
-      this.logger.debug('User not found');
-      return null;
-    }
-
-    if (!(await PasswordUtils.verify(userModel.password, user.password))) {
-      this.logger.debug('Invalid password');
-      return null;
-    }
-
-    return user;
-  }
 
   /**
    * Validate JWT payload.

@@ -5,12 +5,12 @@ import { Observable } from 'rxjs';
 
 import { User } from '~/modules/entities';
 
-import { LOCAL_AUTH_GUARD, PUBLIC_GUARD } from '../_.constant';
+import { ACCESS_TOKEN_GUARD, PUBLIC_GUARD } from '../constants';
 
-/** Local auth guard. */
+/** AccessToken guard. */
 @Injectable()
-export class LocalAuthGuard extends AuthGuard(LOCAL_AUTH_GUARD) implements IAuthGuard {
-  private logger = new Logger(LocalAuthGuard.name);
+export class AccessTokenGuard extends AuthGuard(ACCESS_TOKEN_GUARD) implements IAuthGuard {
+  private logger = new Logger(AccessTokenGuard.name);
 
   constructor(
     /** Reflector. */
@@ -19,8 +19,10 @@ export class LocalAuthGuard extends AuthGuard(LOCAL_AUTH_GUARD) implements IAuth
     super();
   }
 
-  override canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_GUARD, [context.getHandler(), context.getClass()]);
+  override canActivate(context: ExecutionContext): boolean | Observable<boolean> | Promise<boolean> {
+    const targets = [context.getHandler(), context.getClass()];
+
+    const isPublic = this.reflector.getAllAndOverride<boolean>(PUBLIC_GUARD, targets);
     if (isPublic) {
       this.logger.debug(`Skip cause route has ${PUBLIC_GUARD}`);
 

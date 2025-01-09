@@ -154,6 +154,12 @@
       "base": "database",
       "color": "#5A6E79",
       "folderNames": ["migrations"]
+    },
+    {
+      "name": "repository",
+      "base": "class",
+      "color": "#9FA971",
+      "folderNames": ["repository"]
     }
   ],
   "search.exclude": {
