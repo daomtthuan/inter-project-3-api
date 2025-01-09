@@ -58,10 +58,10 @@
       "fileExtensions": ["entity.ts"]
     },
     {
-      "name": "dto",
+      "name": "model",
       "base": "typescript",
-      "color": "#757575",
-      "fileExtensions": ["dto.ts"]
+      "color": "#DC5655",
+      "fileExtensions": ["model.ts"]
     },
     {
       "name": "config",
@@ -130,12 +130,6 @@
       "base": "log",
       "color": "#AFB23C",
       "folderNames": ["logger"]
-    },
-    {
-      "name": "dto",
-      "base": "class",
-      "color": "#757575",
-      "folderNames": ["dto"]
     },
     {
       "name": "declaration",

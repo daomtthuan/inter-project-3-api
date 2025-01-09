@@ -3,7 +3,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 
 import { PasswordUtils } from '~/utils/secure';
 
-import { DATABASE_TABLES, MIGRATIONS_TABLE, ROLE_TABLE, USER_ROLES_TABLE, USER_TABLE } from '../_.constant';
+import { DATABASE_TABLES, MIGRATIONS_TABLE, ROLE_TABLE, USER_ROLE_TABLE, USER_TABLE } from '../_.constant';
 
 /** Database initialization migration. */
 export class Initialization1736111338015 implements MigrationInterface {
@@ -83,13 +83,13 @@ export class Initialization1736111338015 implements MigrationInterface {
 
     await Promise.all([
       ...adminUsers.map(async (user) => {
-        await queryRunner.manager.insert(USER_ROLES_TABLE.name, {
+        await queryRunner.manager.insert(USER_ROLE_TABLE.name, {
           userId: user.id,
           roleId: adminRole.id,
         });
       }),
       ...users.map(async (user) => {
-        await queryRunner.manager.insert(USER_ROLES_TABLE.name, {
+        await queryRunner.manager.insert(USER_ROLE_TABLE.name, {
           userId: user.id,
           roleId: userRole.id,
         });

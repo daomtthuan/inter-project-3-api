@@ -3,8 +3,8 @@ import { ClassSerializerInterceptor, Controller, Post, Request, UnauthorizedExce
 import { RequestTypeWithUser } from '~/types/http';
 
 import { AuthService } from '../_.service';
-import { JwtToken } from '../_.service.type';
 import { JwtAuth, LocalAuth } from '../decorators';
+import { TokenModel } from '../models';
 
 /** Auth controller. */
 @UseInterceptors(ClassSerializerInterceptor)
@@ -16,15 +16,15 @@ export class TokenAuthController {
   ) {}
 
   /**
-   * Sign in a user.
+   * Get Token.
    *
    * @param req Request.
    *
-   * @returns Sign in result.
+   * @returns Token.
    */
   @LocalAuth()
   @Post()
-  async getAccessToken(@Request() req: RequestTypeWithUser): Promise<JwtToken> {
+  async getAccessToken(@Request() req: RequestTypeWithUser): Promise<TokenModel> {
     const token = await this.auth.createToken(req);
     if (!token) {
       throw new UnauthorizedException();
@@ -33,9 +33,16 @@ export class TokenAuthController {
     return token;
   }
 
-  @JwtAuth('refreshToken')
+  /**
+   * Refresh Token.
+   *
+   * @param req Request.
+   *
+   * @returns Token.
+   */
+  @JwtAuth('refresh')
   @Post('refresh')
-  async refreshToken(@Request() req: RequestTypeWithUser): Promise<JwtToken> {
+  async refreshToken(@Request() req: RequestTypeWithUser): Promise<TokenModel> {
     const token = await this.auth.createToken(req);
     if (!token) {
       throw new UnauthorizedException();

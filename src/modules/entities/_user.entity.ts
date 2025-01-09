@@ -1,5 +1,5 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseEntity } from './_base.entity';
 import { Role } from './_role.entity';
@@ -33,19 +33,19 @@ export class User extends BaseEntity {
   isActive!: boolean;
 
   /** Roles of the user. */
-  @ManyToMany(() => Role)
-  @JoinTable()
   @Transform(({ value }) => value.map((role: Role) => role.name))
-  roles!: Role[];
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable({ name: 'user_role' })
+  roles?: Role[];
 
-  /** Sessions of the user. */
+  /** Session of the user. */
   @Exclude()
-  @OneToMany(() => Session, (session) => session.user)
-  sessions!: Session[];
+  @OneToOne(() => Session, (session) => session.user)
+  session?: Session;
 
   /** @returns Full name of the user. */
   @Expose()
   get fullName(): string {
-    return `${this.firstName} ${this.lastName}`;
+    return `${this.firstName ?? ''} ${this.lastName ?? ''}`.replace(/\s+/g, ' ');
   }
 }

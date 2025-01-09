@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 import { BaseEntity } from './_base.entity';
 import { User } from './_user.entity';
@@ -11,10 +11,11 @@ export class Session extends BaseEntity {
   userId!: string;
 
   /** Refresh token. */
-  @PrimaryColumn()
+  @Column()
   refreshToken!: string;
 
   /** User. */
-  @ManyToOne(() => User, (user) => user.sessions)
+  @OneToOne(() => User, (user) => user.session)
+  @JoinColumn({ name: 'userId' })
   user!: User;
 }

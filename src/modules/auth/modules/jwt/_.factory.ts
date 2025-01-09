@@ -11,16 +11,19 @@ import { JwtAuthModule } from './_.module';
 export const JwtAuthFactory = registerAs('JWT_AUTH', (): JwtModuleOptions => {
   const logger = new Logger(JwtAuthModule.module.name);
 
-  const secret = EnvUtils.getString('JWT_SECRET');
   const issuer = EnvUtils.getString('BASE_URL');
+  const secret = EnvUtils.getString('JWT_ACCESS_TOKEN_SECRET');
   const expiresIn = EnvUtils.getString('JWT_ACCESS_TOKEN_EXPIRED');
 
   logger.debug(`${JwtAuthFactory.KEY} loaded`, {
-    secret: SecureStringUtils.mask(secret, 4),
     issuer,
-    expiresIn: {
-      accessToken: expiresIn,
-      refreshToken: EnvUtils.getString('JWT_REFRESH_TOKEN_EXPIRED'),
+    accessToken: {
+      secret: SecureStringUtils.mask(secret, 4),
+      expiresIn,
+    },
+    refreshToken: {
+      secret: SecureStringUtils.mask(EnvUtils.getString('JWT_REFRESH_TOKEN_SECRET'), 4),
+      expiresIn: EnvUtils.getString('JWT_REFRESH_TOKEN_EXPIRED'),
     },
   });
 

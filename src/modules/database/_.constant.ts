@@ -111,9 +111,9 @@ export const USER_TABLE = new Table({
   ],
 });
 
-/** User roles table. */
-export const USER_ROLES_TABLE = new Table({
-  name: 'user_roles',
+/** User role table. */
+export const USER_ROLE_TABLE = new Table({
+  name: 'user_role',
   columns: [
     {
       name: 'userId',
@@ -153,7 +153,6 @@ export const SESSION_TABLE = new Table({
     {
       name: 'refreshToken',
       type: TYPE.TEXT,
-      isPrimary: true,
     },
     ...TRACKABLE_COLUMNS,
   ],
@@ -167,4 +166,4 @@ export const SESSION_TABLE = new Table({
 });
 
 /** Database tables. */
-export const DATABASE_TABLES = [ROLE_TABLE, USER_TABLE, USER_ROLES_TABLE, SESSION_TABLE];
+export const DATABASE_TABLES = [ROLE_TABLE, USER_TABLE, USER_ROLE_TABLE, SESSION_TABLE];

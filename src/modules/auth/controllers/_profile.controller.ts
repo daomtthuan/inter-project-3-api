@@ -14,12 +14,12 @@ export class ProfileAuthController {
   /**
    * Get user profile.
    *
-   * @param req Request.
+   * @param request Request.
    *
    * @returns User profile.
    */
   @Get()
-  async getProfile(@Request() req: RequestTypeWithUser): Promise<Except<User, 'password'>> {
-    return req.user;
+  async getProfile(@Request() { user }: RequestTypeWithUser): Promise<Except<User, 'password'>> {
+    return user;
   }
 }
