@@ -17,7 +17,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, LOCAL_AUTH_GUARD) 
     super();
   }
 
-  async validate(username: string, password: string): Promise<User | null> {
-    return await this.authService.validateUser({ username, password });
+  async validate(username: unknown, password: unknown): Promise<User | null> {
+    return await this.authService.validateUser(username, password);
   }
 }

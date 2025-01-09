@@ -8,7 +8,6 @@ import { EnvUtils } from '~/utils/core';
 
 import { REFRESH_TOKEN_GUARD } from '../_.constant';
 import { AuthService } from '../_.service';
-import { PayloadModel } from '../models';
 
 /** RefreshToken authentication strategy. */
 @Injectable()
@@ -26,7 +25,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, REFRESH_TOK
     } satisfies StrategyOptionsWithRequest);
   }
 
-  async validate(req: RequestTypeWithUser, payload: PayloadModel): Promise<User | null> {
+  async validate(req: RequestTypeWithUser, payload: unknown): Promise<User | null> {
     return this.authService.validateJwtPayload(req, payload);
   }
 }

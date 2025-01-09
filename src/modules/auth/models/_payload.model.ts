@@ -1,4 +1,4 @@
-import { instanceToPlain } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
 /** Interface for PayloadModel. */
 export interface IPayloadModel {
@@ -14,17 +14,14 @@ export interface IPayloadModel {
 
 /** PayloadModel. */
 export class PayloadModel implements IPayloadModel {
-  type: 'access' | 'refresh';
-  sub: string;
-  username: string;
+  @IsEnum(['access', 'refresh'])
+  type!: 'access' | 'refresh';
 
-  constructor({ type, sub, username }: IPayloadModel) {
-    this.type = type;
-    this.sub = sub;
-    this.username = username;
-  }
+  @IsString()
+  @IsNotEmpty()
+  sub!: string;
 
-  toJSON() {
-    return instanceToPlain(this);
-  }
+  @IsString()
+  @IsNotEmpty()
+  username!: string;
 }

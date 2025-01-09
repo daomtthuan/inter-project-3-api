@@ -1,3 +1,5 @@
+import { IsNotEmpty, IsString } from 'class-validator';
+
 /** Interface for TokenModel. */
 export interface ITokenModel {
   /** Access token. */
@@ -9,11 +11,11 @@ export interface ITokenModel {
 
 /** TokenModel. */
 export class TokenModel implements ITokenModel {
-  accessToken: string;
-  refreshToken: string;
+  @IsString()
+  @IsNotEmpty()
+  accessToken!: string;
 
-  constructor({ accessToken, refreshToken }: ITokenModel) {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
-  }
+  @IsString()
+  @IsNotEmpty()
+  refreshToken!: string;
 }

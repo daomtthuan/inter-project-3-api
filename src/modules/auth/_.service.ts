@@ -1,10 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Except } from 'type-fest';
 import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
 
 import { RequestTypeWithUser } from '~/types/http';
-import { EnvUtils, ValueUtils } from '~/utils/core';
+import { EnvUtils, ObjectUtils, ValueUtils } from '~/utils/core';
 import { PasswordUtils, SecureStringUtils } from '~/utils/secure';
 
 import { Session, User } from '../entities';
@@ -24,6 +25,7 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
 
+    /** Session repository. */
     @InjectRepository(Session)
     private sessionRepository: Repository<Session>,
   ) {}
@@ -31,14 +33,21 @@ export class AuthService {
   /**
    * Validate user.
    *
-   * @param userModel UserModel.
+   * @param usernameDto Username.
+   * @param passwordDto Password.
    *
    * @returns `User` if valid, otherwise `null`.
    */
-  async validateUser({ username, password }: UserModel): Promise<User | null> {
+  async validateUser(usernameDto: unknown, passwordDto: unknown): Promise<User | null> {
+    const userModel = await ObjectUtils.createInstance(UserModel, { username: usernameDto, password: passwordDto });
+    if (!userModel) {
+      this.logger.debug('Invalid user model');
+      return null;
+    }
+
     const user = await this.userRepository.findOne({
       where: {
-        username,
+        username: userModel.username,
         isActive: true,
       },
       relations: {
@@ -50,7 +59,7 @@ export class AuthService {
       return null;
     }
 
-    if (!(await PasswordUtils.verify(password, user.password))) {
+    if (!(await PasswordUtils.verify(userModel.password, user.password))) {
       this.logger.debug('Invalid password');
       return null;
     }
@@ -62,14 +71,20 @@ export class AuthService {
    * Validate JWT payload.
    *
    * @param req Request.
-   * @param payload JWT payload.
+   * @param payloadDto JWT payload.
    *
    * @returns `User` if valid, otherwise `null`.
    */
-  async validateJwtPayload(req: RequestTypeWithUser, payload: PayloadModel): Promise<User | null> {
+  async validateJwtPayload(req: RequestTypeWithUser, payloadDto: unknown): Promise<User | null> {
+    const payloadModel = await ObjectUtils.createInstance(PayloadModel, payloadDto);
+    if (!payloadModel) {
+      this.logger.debug('Invalid payload');
+      return null;
+    }
+
     const userWhere: FindOptionsWhere<User> = {
-      id: payload['sub'],
-      username: payload['username'],
+      id: payloadModel.sub,
+      username: payloadModel.username,
       isActive: true,
     };
     const userRelations: FindOptionsRelations<User> = {
@@ -77,7 +92,7 @@ export class AuthService {
     };
 
     // Access token
-    if (payload.type === 'access') {
+    if (payloadModel.type === 'access') {
       const user = await this.userRepository.findOne({
         where: userWhere,
         relations: userRelations,
@@ -91,7 +106,7 @@ export class AuthService {
     }
 
     // Refresh token
-    if (payload.type === 'refresh') {
+    if (payloadModel.type === 'refresh') {
       const token = this.extractToken(req);
       if (!token) {
         this.logger.debug('Token not found');
@@ -168,20 +183,21 @@ export class AuthService {
    * @returns JWT token.
    */
   private async generateToken(user: User): Promise<TokenModel> {
+    const payload: Except<PayloadModel, 'type'> = {
+      sub: user.id,
+      username: user.username,
+    };
+
     const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync({
+        type: 'access',
+        ...payload,
+      } satisfies PayloadModel),
       this.jwtService.signAsync(
-        new PayloadModel({
-          type: 'access',
-          sub: user.id,
-          username: user.username,
-        }).toJSON(),
-      ),
-      this.jwtService.signAsync(
-        new PayloadModel({
+        {
           type: 'refresh',
-          sub: user.id,
-          username: user.username,
-        }).toJSON(),
+          ...payload,
+        } satisfies PayloadModel,
         {
           secret: EnvUtils.getString('JWT_REFRESH_TOKEN_SECRET'),
           expiresIn: EnvUtils.getString('JWT_REFRESH_TOKEN_EXPIRED'),

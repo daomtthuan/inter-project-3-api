@@ -1,3 +1,5 @@
+import { IsNotEmpty, IsString } from 'class-validator';
+
 /** Interface for UserModel. */
 export interface IUserModel {
   /** Username. */
@@ -9,11 +11,11 @@ export interface IUserModel {
 
 /** UserModel. */
 export class UserModel implements IUserModel {
-  username: string;
-  password: string;
+  @IsString()
+  @IsNotEmpty()
+  username!: string;
 
-  constructor({ username, password }: IUserModel) {
-    this.username = username;
-    this.password = password;
-  }
+  @IsString()
+  @IsNotEmpty()
+  password!: string;
 }

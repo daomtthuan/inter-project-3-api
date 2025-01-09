@@ -1,10 +1,27 @@
-import { BaseEntity as Base, Column, Entity } from 'typeorm';
+import { Transform } from 'class-transformer';
+import { BaseEntity as Base, BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 
 @Entity()
 export abstract class BaseEntity extends Base {
-  @Column({ default: Date.now() })
+  @Transform(({ value }) => value.toISOString())
+  @Column({
+    default: () => 'datetime()',
+  })
   createdAt!: Date;
 
-  @Column({ default: Date.now() })
+  @Transform(({ value }) => value.toISOString())
+  @Column({
+    default: () => 'datetime()',
+  })
   updatedAt!: Date;
+
+  @BeforeInsert()
+  setCreatedAt() {
+    this.createdAt = new Date();
+  }
+
+  @BeforeUpdate()
+  setUpdatedAt() {
+    this.updatedAt = new Date();
+  }
 }

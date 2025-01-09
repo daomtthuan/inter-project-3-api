@@ -46,6 +46,6 @@ export class User extends BaseEntity {
   /** @returns Full name of the user. */
   @Expose()
   get fullName(): string {
-    return `${this.firstName ?? ''} ${this.lastName ?? ''}`.replace(/\s+/g, ' ');
+    return `${this.firstName ?? ''} ${this.lastName ?? ''}`.replace(/\s+/g, ' ').trim();
   }
 }

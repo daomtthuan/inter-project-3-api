@@ -8,7 +8,6 @@ import { EnvUtils } from '~/utils/core';
 
 import { ACCESS_TOKEN_GUARD } from '../_.constant';
 import { AuthService } from '../_.service';
-import { PayloadModel } from '../models';
 
 /** AccessToken authentication strategy. */
 @Injectable()
@@ -26,7 +25,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, ACCESS_TOKEN
     } satisfies StrategyOptionsWithRequest);
   }
 
-  async validate(req: RequestTypeWithUser, payload: PayloadModel): Promise<User | null> {
+  async validate(req: RequestTypeWithUser, payload: unknown): Promise<User | null> {
     return this.authService.validateJwtPayload(req, payload);
   }
 }
