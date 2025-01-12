@@ -1,0 +1,1134 @@
+{
+	"info": {
+		"_postman_id": "0e19ef4c-b5fd-4caa-8d15-25dca1aa698e",
+		"name": "Quality Assessment Survey",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38818338"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Token",
+					"item": [
+						{
+							"name": "Get Admin Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 201) {\r",
+											"  console.error('Get token failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const { accessToken, refreshToken } = pm.response.json();\r",
+											"\r",
+											"console.info('Set token:');\r",
+											"\r",
+											"console.log('ACCESS_TOKEN', accessToken);\r",
+											"pm.collectionVariables.set(\"ACCESS_TOKEN\", accessToken);\r",
+											"\r",
+											"console.log('REFRESH_TOKEN', refreshToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", refreshToken);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"Admin@123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{AUTH_PATH}}/token",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{AUTH_PATH}}",
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 201) {\r",
+											"  console.error('Get token failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const { accessToken, refreshToken } = pm.response.json();\r",
+											"\r",
+											"console.info('Set token:');\r",
+											"\r",
+											"console.log('ACCESS_TOKEN', accessToken);\r",
+											"pm.collectionVariables.set(\"ACCESS_TOKEN\", accessToken);\r",
+											"\r",
+											"console.log('REFRESH_TOKEN', refreshToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", refreshToken);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"user1\",\r\n  \"password\": \"User@123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{AUTH_PATH}}/token",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{AUTH_PATH}}",
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 201) {\r",
+											"  console.error('Refresh token failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const { accessToken, refreshToken } = pm.response.json();\r",
+											"\r",
+											"console.info('Set token:');\r",
+											"\r",
+											"console.log('Set ACCESS_TOKEN', accessToken);\r",
+											"pm.collectionVariables.set(\"ACCESS_TOKEN\", accessToken);\r",
+											"\r",
+											"console.log('Set REFRESH_TOKEN', refreshToken);\r",
+											"pm.collectionVariables.set(\"REFRESH_TOKEN\", refreshToken);"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{REFRESH_TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"Admin@123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{AUTH_PATH}}/token/refresh",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{AUTH_PATH}}",
+										"token",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Get Profile",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{AUTH_PATH}}/profile",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{AUTH_PATH}}",
+										"profile"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"const BASE_URL = pm.environment.get('BASE_URL');\r",
+									"const AUTH_PATH = pm.environment.get('AUTH_PATH');\r",
+									"const REFRESH_TOKEN = pm.collectionVariables.get(\"REFRESH_TOKEN\");\r",
+									"\r",
+									"console.info('Refresh token:')\r",
+									"const response = await pm.sendRequest({\r",
+									"  url: `${BASE_URL}/${AUTH_PATH}/token/refresh`,\r",
+									"  method: \"POST\",\r",
+									"  header: {\r",
+									"    'Authorization': `Bearer ${REFRESH_TOKEN}`\r",
+									"  }\r",
+									"});\r",
+									"\r",
+									"if (response.code !== 201) {\r",
+									"  console.error('Refresh token failed')\r",
+									"  return;\r",
+									"}\r",
+									"\r",
+									"const { accessToken } = response.json();\r",
+									"console.log('Set ACCESS_TOKEN', accessToken);\r",
+									"pm.collectionVariables.set(\"ACCESS_TOKEN\", accessToken);\r",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Api",
+			"item": [
+				{
+					"name": "Survey",
+					"item": [
+						{
+							"name": "List",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 200) {\r",
+											"  console.error('Get Survey list failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const [item] = pm.response.json();\r",
+											"if (!item) {\r",
+											"  console.info('Survey list empty');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"console.info('Set target Survey:');\r",
+											"\r",
+											"console.log('Set SURVEY', item);\r",
+											"pm.collectionVariables.set(\"SURVEY_ID\", item.id);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{API_PATH}}/survey/list",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{API_PATH}}",
+										"survey",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{API_PATH}}/survey/{{SURVEY_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{API_PATH}}",
+										"survey",
+										"{{SURVEY_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 201) {\r",
+											"  console.error('Create Survey failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const { id } = pm.response.json();\r",
+											"console.info('Set target Survey:');\r",
+											"\r",
+											"console.log('Set SURVEY_ID', id);\r",
+											"pm.collectionVariables.set(\"SURVEY_ID\", id);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"rating\": 8,\r\n  \"feedback\": \"The work environment is excellent, and the management is supportive.\",\r\n  \"isAnonymous\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{API_PATH}}/survey",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{API_PATH}}",
+										"survey"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"rating\": 10,\r\n  \"feedback\": \"The work environment is excellent, and the management is supportive.\",\r\n  \"isAnonymous\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{API_PATH}}/survey/{{SURVEY_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{API_PATH}}",
+										"survey",
+										"{{SURVEY_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"rating\": 10,\r\n  \"feedback\": \"The work environment is excellent, and the management is supportive.\",\r\n  \"isAnonymous\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{API_PATH}}/survey/{{SURVEY_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{API_PATH}}",
+										"survey",
+										"{{SURVEY_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"const BASE_URL = pm.environment.get('BASE_URL');\r",
+							"const AUTH_PATH = pm.environment.get('AUTH_PATH');\r",
+							"const REFRESH_TOKEN = pm.collectionVariables.get(\"REFRESH_TOKEN\");\r",
+							"\r",
+							"console.info('Refresh token:')\r",
+							"const response = await pm.sendRequest({\r",
+							"  url: `${BASE_URL}/${AUTH_PATH}/token/refresh`,\r",
+							"  method: \"POST\",\r",
+							"  header: {\r",
+							"    'Authorization': `Bearer ${REFRESH_TOKEN}`\r",
+							"  }\r",
+							"});\r",
+							"\r",
+							"if (response.code !== 201) {\r",
+							"  console.error('Refresh token failed')\r",
+							"  return;\r",
+							"}\r",
+							"\r",
+							"const { accessToken } = response.json();\r",
+							"console.log('Set ACCESS_TOKEN', accessToken);\r",
+							"pm.collectionVariables.set(\"ACCESS_TOKEN\", accessToken);\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Survey",
+					"item": [
+						{
+							"name": "List",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 200) {\r",
+											"  console.error('Get Survey list failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const [item] = pm.response.json();\r",
+											"if (!item) {\r",
+											"  console.info('Survey list empty');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"console.info('Set target Survey:');\r",
+											"\r",
+											"console.log('Set SURVEY', item);\r",
+											"pm.collectionVariables.set(\"SURVEY_ID\", item.id);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/survey/list",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"survey",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/survey/{{SURVEY_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"survey",
+										"{{SURVEY_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Report",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"reason\": \"Spam\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/survey/{{SURVEY_ID}}/report",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"survey",
+										"{{SURVEY_ID}}",
+										"report"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "List",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 200) {\r",
+											"  console.error('Get User list failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const [item] = pm.response.json();\r",
+											"if (!item) {\r",
+											"  console.info('User list empty');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"console.info('Set target User:');\r",
+											"\r",
+											"console.log('Set USER', item);\r",
+											"pm.collectionVariables.set(\"USER_ID\", item.id);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/user/list",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"user",
+										"list"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/user/{{USER_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"user",
+										"{{USER_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code !== 201) {\r",
+											"  console.error('Create Survey failed');\r",
+											"  return;\r",
+											"}\r",
+											"\r",
+											"const { id } = pm.response.json();\r",
+											"console.info('Set target Survey:');\r",
+											"\r",
+											"console.log('Set SURVEY_ID', id);\r",
+											"pm.collectionVariables.set(\"SURVEY_ID\", id);\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"username\": \"thuandmt\",\r\n  \"password\": \"User@123\",\r\n  \"firstName\": \"Thuan\",\r\n  \"lastName\": \"Dao\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/user",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"Administrator\",\r\n  \"isActive\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/user/{{USER_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"user",
+										"{{USER_ID}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"firstName\": \"Administrator\",\r\n  \"isActive\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/{{ADMIN_PATH}}/user/{{USER_ID}}",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"{{ADMIN_PATH}}",
+										"user",
+										"{{USER_ID}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"const BASE_URL = pm.environment.get('BASE_URL');\r",
+							"const AUTH_PATH = pm.environment.get('AUTH_PATH');\r",
+							"const REFRESH_TOKEN = pm.collectionVariables.get(\"REFRESH_TOKEN\");\r",
+							"\r",
+							"console.info('Refresh token:')\r",
+							"const response = await pm.sendRequest({\r",
+							"  url: `${BASE_URL}/${AUTH_PATH}/token/refresh`,\r",
+							"  method: \"POST\",\r",
+							"  header: {\r",
+							"    'Authorization': `Bearer ${REFRESH_TOKEN}`\r",
+							"  }\r",
+							"});\r",
+							"\r",
+							"if (response.code !== 201) {\r",
+							"  console.error('Refresh token failed')\r",
+							"  return;\r",
+							"}\r",
+							"\r",
+							"const { accessToken } = response.json();\r",
+							"console.log('Set ACCESS_TOKEN', accessToken);\r",
+							"pm.collectionVariables.set(\"ACCESS_TOKEN\", accessToken);\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{ACCESS_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"console.clear();"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ACCESS_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "REFRESH_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "SURVEY_ID",
+			"value": ""
+		},
+		{
+			"key": "USER_ID",
+			"value": ""
+		}
+	]
+}
