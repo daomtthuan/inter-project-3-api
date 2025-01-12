@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy, StrategyOptionsWithRequest } from 'passport-jwt';
 
-import { RequestTypeWithUser } from '~/common/types/http';
+import { RequestWithUser } from '~/common/types/http';
 import { UserEntity } from '~/entities';
 import { EnvUtils } from '~/utils/core';
 
@@ -25,7 +25,7 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, REFRESH_TOK
     } satisfies StrategyOptionsWithRequest);
   }
 
-  async validate(req: RequestTypeWithUser, payload: unknown): Promise<UserEntity | null> {
+  async validate(req: RequestWithUser, payload: unknown): Promise<UserEntity | null> {
     return this.tokenAuthService.validateJwtPayload(req, payload);
   }
 }

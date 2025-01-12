@@ -28,34 +28,34 @@ export class UserAuthService {
    * @returns `User` if valid, otherwise `null`.
    */
   async validateUser(username: unknown, password: unknown): Promise<UserEntity | null> {
-    const user = await UserModel.validate({
+    const userModel = await UserModel.validate({
       username,
       password,
     });
-    if (!user) {
+    if (!userModel) {
       this.logger.debug('Invalid user model');
       return null;
     }
 
-    const existedUser = await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
-        username: user.username,
+        username: userModel.username,
         isActive: true,
       },
       relations: {
         roles: true,
       },
     });
-    if (!existedUser) {
+    if (!user) {
       this.logger.debug('User not found');
       return null;
     }
 
-    if (!(await PasswordUtils.verify(user.password, existedUser.password))) {
+    if (!(await PasswordUtils.verify(userModel.password, user.password))) {
       this.logger.debug('Invalid password');
       return null;
     }
 
-    return existedUser;
+    return user;
   }
 }

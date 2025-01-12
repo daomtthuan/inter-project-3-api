@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 
-import { RequestTypeWithUser } from '~/common/types/http';
+import { RequestWithUser } from '~/common/types/http';
 
-/** Api service. */
+/** Guard api service. */
 @Injectable()
-export class ApiService {
-  private logger = new Logger(ApiService.name);
+export class GuardApiService {
+  private logger = new Logger(GuardApiService.name);
 
-  validateUserRole({ user }: RequestTypeWithUser): boolean {
+  validateUserRole({ user }: RequestWithUser): boolean {
     if (user.roles?.some((role) => role.name === 'user')) {
       return true;
     }

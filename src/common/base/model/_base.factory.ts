@@ -27,7 +27,7 @@ export function ModelFactory<TType extends object>(cls: Class<TType>, options: M
     static create<TData extends object = Partial<TType>>(data: TData, mapperOptions: MapperOptions<TType> = {}): TType {
       const { map, pick, omit } = { ...options, ...mapperOptions };
 
-      let mappedData = map ? map(data) : data;
+      let mappedData = map ? map(data) : (data as unknown as TType);
       if (pick?.length) {
         mappedData = ObjectUtils.filterProperties(mappedData, (key) => {
           const result = !!pick.includes(key);
@@ -35,7 +35,7 @@ export function ModelFactory<TType extends object>(cls: Class<TType>, options: M
           return result;
         });
       } else {
-        mappedData = ObjectUtils.filterProperties(mappedData, (key) => key !== 'deletedAt' && !omit?.includes(key));
+        mappedData = ObjectUtils.omitProperties(mappedData, ['deletedAt' as keyof TType, ...(omit ?? [])]);
       }
 
       return plainToInstance(cls, mappedData);

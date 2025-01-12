@@ -1,12 +1,12 @@
 import { UserEntity } from '~/entities';
 
 /**
- * Request type.
+ * Request.
  *
  * @template TUser User type.
  * @template TAuthInfo Authentication information type.
  */
-export type RequestType<TUser = undefined, TAuthInfo = undefined> = Express.Request & {
+export type Request<TUser = undefined, TAuthInfo = undefined> = Express.Request & {
   /** User. */
   user: TUser;
 
@@ -18,8 +18,8 @@ export type RequestType<TUser = undefined, TAuthInfo = undefined> = Express.Requ
 };
 
 /**
- * Request type with user.
+ * Request with user.
  *
  * @template TAuthInfo Authentication information type.
  */
-export type RequestTypeWithUser = RequestType<UserEntity, Record<string, unknown>>;
+export type RequestWithUser = Request<UserEntity, Record<string, unknown>>;

@@ -1,6 +1,6 @@
 import { Get, Req } from '@nestjs/common';
 
-import { RequestTypeWithUser } from '~/common/types/http';
+import { RequestWithUser } from '~/common/types/http';
 
 import { Auth, AuthController } from '../decorators';
 import { ProfileModel } from '../models';
@@ -17,7 +17,7 @@ export class ProfileAuthController {
    * @returns User profile.
    */
   @Get()
-  async getProfile(@Req() { user }: RequestTypeWithUser): Promise<ProfileModel> {
+  async getProfile(@Req() { user }: RequestWithUser): Promise<ProfileModel> {
     return ProfileModel.create(user);
   }
 }

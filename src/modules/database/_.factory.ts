@@ -27,6 +27,5 @@ export const DatabaseFactory = registerAs('DATABASE', (): TypeOrmModuleOptions =
     migrationsTableName: MIGRATIONS_TABLE.name,
     migrationsRun: true,
     logging: true,
-    synchronize: true,
   };
 });

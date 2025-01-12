@@ -6,10 +6,18 @@ import { EntityBaseWidthId } from './_base-id.entity';
 @Entity()
 export abstract class EntityBaseWithTrackable extends EntityBaseWidthId {
   /** Created at. */
-  @CreateDateColumn()
+  @CreateDateColumn({
+    name: 'created_at',
+    type: 'datetime',
+    nullable: false,
+  })
   createdAt!: Date;
 
   /** Updated at. */
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'datetime',
+    nullable: false,
+  })
   updatedAt!: Date;
 }

@@ -22,13 +22,44 @@ class Survey extends ModelBase {
   /** Anonymous. */
   @IsBoolean()
   isAnonymous!: boolean;
+
+  /** Owner. */
+  owner?: string;
+
+  /** Is reported. */
+  reported?:
+    | boolean
+    | {
+        /** Reported by. */
+        by: string;
+
+        /** Reason. */
+        reason: string;
+      };
 }
 
 /** SurveyModel. */
 export class SurveyModel extends ModelFactory(Survey, {
   map: (data) => {
     if (data instanceof SurveyEntity) {
-      return ObjectUtils.pickProperties(data, ['id', 'rating', 'feedback', 'isAnonymous', 'createdAt', 'updatedAt', 'deletedAt']);
+      return {
+        ...ObjectUtils.pickProperties(data, ['id', 'rating', 'feedback', 'createdAt', 'updatedAt']),
+        owner: data.isAnonymous ? undefined : data.owner.fullName,
+        reported: (() => {
+          if (!data.report) {
+            return false;
+          }
+
+          if (data.report.reporter) {
+            return {
+              by: data.report.reporter.fullName,
+              reason: data.report.reason,
+            };
+          }
+
+          return true;
+        })(),
+      };
     }
 
     throw new NotImplementedException();

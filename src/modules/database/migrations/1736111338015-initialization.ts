@@ -12,7 +12,7 @@ export class Initialization1736111338015 implements MigrationInterface {
   private logger = new Logger(Initialization1736111338015.name);
 
   async up(queryRunner: QueryRunner): Promise<void> {
-    // await this.updateMigrationsTable(queryRunner);
+    await this.updateMigrationsTable(queryRunner);
 
     for (const table of DATABASE_TABLES) {
       await queryRunner.createTable(table, true, true);
@@ -31,7 +31,7 @@ export class Initialization1736111338015 implements MigrationInterface {
     this.logger.log('Down migration executed');
   }
 
-  async updateMigrationsTable(queryRunner: QueryRunner): Promise<void> {
+  private async updateMigrationsTable(queryRunner: QueryRunner): Promise<void> {
     for (const column of MIGRATIONS_TABLE.columns) {
       await queryRunner.changeColumn(MIGRATIONS_TABLE, column.name, column);
     }

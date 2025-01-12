@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Except } from 'type-fest';
 import { FindOptionsRelations, FindOptionsWhere, Repository } from 'typeorm';
 
-import { RequestTypeWithUser } from '~/common/types/http';
+import { RequestWithUser } from '~/common/types/http';
 import { SessionEntity, UserEntity } from '~/entities';
 import { EnvUtils, ValueUtils } from '~/utils/core';
 import { PasswordUtils, SecureStringUtils } from '~/utils/secure';
@@ -38,7 +38,7 @@ export class TokenAuthService {
    *
    * @returns `User` if valid, otherwise `null`.
    */
-  async validateJwtPayload(req: RequestTypeWithUser, data: unknown): Promise<UserEntity | null> {
+  async validateJwtPayload(req: RequestWithUser, data: unknown): Promise<UserEntity | null> {
     const payload = await PayloadModel.validate(data);
     if (!payload) {
       this.logger.debug('Invalid payload');
@@ -107,13 +107,13 @@ export class TokenAuthService {
    *
    * @returns `TokenModel` if successful, otherwise `null`.
    */
-  async createToken({ user }: RequestTypeWithUser): Promise<TokenModel | null> {
+  async createToken({ user }: RequestWithUser): Promise<TokenModel | null> {
     if (!user) {
       this.logger.debug(`'user' not found in request`);
       return null;
     }
 
-    const existedSession = await this.sessionRepository.findOne({
+    const session = await this.sessionRepository.findOne({
       where: {
         user: {
           id: user.id,
@@ -121,9 +121,9 @@ export class TokenAuthService {
         },
       },
     });
-    if (existedSession) {
+    if (session) {
       this.logger.debug('Session found -> remove');
-      await existedSession.remove();
+      await session.remove();
     }
 
     const token = await this.generateToken(user);
@@ -132,11 +132,11 @@ export class TokenAuthService {
       refreshToken: SecureStringUtils.mask(token.refreshToken, 4),
     });
 
-    const session = this.sessionRepository.create({
+    const createdSession = this.sessionRepository.create({
       user,
       refreshToken: await PasswordUtils.hash(token.refreshToken),
     });
-    await session.save();
+    await createdSession.save();
 
     return token;
   }
@@ -184,7 +184,7 @@ export class TokenAuthService {
    *
    * @returns Token.
    */
-  private extractToken({ headers }: RequestTypeWithUser): string | null {
+  private extractToken({ headers }: RequestWithUser): string | null {
     const authorization = headers?.authorization;
     if (!ValueUtils.isString(authorization) || ValueUtils.isEmpty(authorization)) {
       return null;

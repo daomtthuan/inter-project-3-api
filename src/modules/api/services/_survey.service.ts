@@ -17,10 +17,17 @@ export class SurveyApiService {
     private surveyRepository: Repository<SurveyEntity>,
   ) {}
 
+  /**
+   * Get list of surveys.
+   *
+   * @param user User.
+   *
+   * @returns Surveys.
+   */
   async getList(user: UserEntity): Promise<SurveyEntity[]> {
     const surveys = await this.surveyRepository.find({
       where: {
-        userId: user.id,
+        ownerId: user.id,
       },
     });
     this.logger.debug('Surveys found', { surveys });
@@ -29,7 +36,7 @@ export class SurveyApiService {
   }
 
   /**
-   * Get a survey.
+   * Get Survey.
    *
    * @param user User.
    * @param surveyId Survey id.
@@ -37,14 +44,14 @@ export class SurveyApiService {
    * @returns Survey if found, otherwise `null`.
    */
   async get(user: UserEntity, surveyId: string): Promise<SurveyEntity | null> {
-    const existedSurvey = await this.getSurvey(user, surveyId);
-    if (!existedSurvey) {
+    const survey = await this.getSurvey(user, surveyId);
+    if (!survey) {
       this.logger.debug('Survey not found');
       return null;
     }
 
-    this.logger.debug('Survey found', { survey: existedSurvey });
-    return existedSurvey;
+    this.logger.debug('Survey found', { survey });
+    return survey;
   }
 
   /**
@@ -56,29 +63,29 @@ export class SurveyApiService {
    * @returns Survey if created, otherwise `null`.
    */
   async create(user: UserEntity, surveyModel: SurveyModel): Promise<SurveyEntity | null> {
-    const existedSurveysInDay = await this.getSurveysInDay(user);
-    if (existedSurveysInDay.length) {
+    const surveysInDay = await this.getSurveysInDay(user);
+    if (surveysInDay.length) {
       this.logger.debug('Survey already exist in day');
       return null;
     }
 
-    const existedSurveysInMonth = await this.getSurveysInMonth(user);
-    if (existedSurveysInMonth.length > 5) {
+    const surveysInMonth = await this.getSurveysInMonth(user);
+    if (surveysInMonth.length > 5) {
       this.logger.debug('Too many surveys in month');
       return null;
     }
 
-    const survey = this.surveyRepository.create({
+    const createdSurvey = this.surveyRepository.create({
       rating: surveyModel.rating,
       feedback: surveyModel.feedback,
       isAnonymous: surveyModel.isAnonymous,
-      user,
+      owner: user,
     });
 
-    await survey.save();
-    this.logger.debug('Survey created', { survey });
+    await createdSurvey.save();
+    this.logger.debug('Survey created', { survey: createdSurvey });
 
-    return survey;
+    return createdSurvey;
   }
 
   /**
@@ -91,20 +98,20 @@ export class SurveyApiService {
    * @returns Updated Survey.
    */
   async update(user: UserEntity, surveyId: string, surveyModel: SurveyModel): Promise<SurveyEntity | null> {
-    const existedSurvey = await this.getSurvey(user, surveyId);
-    if (!existedSurvey) {
+    const survey = await this.getSurvey(user, surveyId);
+    if (!survey) {
       this.logger.debug('Survey not found');
       return null;
     }
 
-    existedSurvey.rating = surveyModel.rating;
-    existedSurvey.feedback = surveyModel.feedback;
-    existedSurvey.isAnonymous = surveyModel.isAnonymous;
+    survey.rating = surveyModel.rating;
+    survey.feedback = surveyModel.feedback;
+    survey.isAnonymous = surveyModel.isAnonymous;
 
-    await existedSurvey.save();
-    this.logger.debug('Survey updated', { survey: existedSurvey });
+    await survey.save();
+    this.logger.debug('Survey updated', { survey });
 
-    return existedSurvey;
+    return survey;
   }
 
   /**
@@ -116,16 +123,16 @@ export class SurveyApiService {
    * @returns Survey if deleted, otherwise `null`.
    */
   async delete(user: UserEntity, surveyId: string): Promise<SurveyEntity | null> {
-    const existedSurvey = await this.getSurvey(user, surveyId);
-    if (!existedSurvey) {
+    const survey = await this.getSurvey(user, surveyId);
+    if (!survey) {
       this.logger.debug('Survey not found');
       return null;
     }
 
-    const survey = await this.surveyRepository.softRemove(existedSurvey);
+    const removedSurvey = await this.surveyRepository.softRemove(survey);
     this.logger.debug('Survey deleted', { survey });
 
-    return survey;
+    return removedSurvey;
   }
 
   /**
@@ -140,7 +147,7 @@ export class SurveyApiService {
     return this.surveyRepository.findOne({
       where: {
         id: surveyId,
-        userId: user.id,
+        ownerId: user.id,
       },
     });
   }
@@ -159,7 +166,7 @@ export class SurveyApiService {
 
     return this.surveyRepository.find({
       where: {
-        userId: user.id,
+        ownerId: user.id,
         createdAt: Between(startOfDay, endOfDay),
       },
       withDeleted: true,
@@ -180,7 +187,7 @@ export class SurveyApiService {
 
     return this.surveyRepository.find({
       where: {
-        userId: user.id,
+        ownerId: user.id,
         createdAt: Between(startOfMonth, endOfMonth),
       },
       withDeleted: true,

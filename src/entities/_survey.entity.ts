@@ -1,30 +1,60 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
 import { EntityBase } from '~/common/base/entity';
 
+import { SurveyReportEntity } from './_reported-survey.entity';
 import { UserEntity } from './_user.entity';
 
 /** SurveyEntity. */
-@Entity({ name: 'survey' })
+@Entity({
+  name: 'survey',
+})
 export class SurveyEntity extends EntityBase {
-  /** User ID. */
-  @Column()
-  userId!: string;
+  /** Owner ID. */
+  @Column({
+    name: 'user_id',
+    type: 'varchar',
+    nullable: false,
+  })
+  ownerId!: string;
 
   /** Rating. */
-  @Column()
+  @Column({
+    name: 'rating',
+    type: 'integer',
+    nullable: false,
+  })
   rating!: number;
 
   /** Feedback. */
-  @Column()
+  @Column({
+    name: 'feedback',
+    type: 'varchar',
+    nullable: true,
+  })
   feedback?: string;
 
   /** Anonymous. */
-  @Column()
+  @Column({
+    name: 'is_anonymous',
+    type: 'boolean',
+    nullable: false,
+  })
   isAnonymous!: boolean;
 
   /** Survey owner. */
-  @ManyToOne(() => UserEntity, (user) => user.surveys)
-  @JoinColumn({ name: 'userId' })
-  user!: UserEntity;
+  @ManyToOne(() => UserEntity, (user) => user.surveys, {
+    nullable: false,
+  })
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  owner!: UserEntity;
+
+  /** Session of the user. */
+  @OneToOne(() => SurveyReportEntity, (report) => report.survey, {
+    nullable: true,
+  })
+  report?: SurveyReportEntity;
 }

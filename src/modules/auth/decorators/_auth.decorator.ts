@@ -1,8 +1,6 @@
 import { applyDecorators, UseGuards } from '@nestjs/common';
 
-import { LocalGuard } from '../guards';
-import { AccessTokenGuard } from '../guards/_access-token.guard';
-import { RefreshTokenGuard } from '../guards/_refresh-token.guard';
+import { AccessTokenGuard, LocalGuard, RefreshTokenGuard } from '../guards';
 import { PayloadModel } from '../models';
 
 /** Decorator to protect a route with local authentication. */
