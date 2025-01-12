@@ -5,6 +5,15 @@ import { EntityBase } from '~/common/base/entity';
 import { SurveyReportEntity } from './_reported-survey.entity';
 import { UserEntity } from './_user.entity';
 
+/** SurveyReporter. */
+export type SurveyReporter = {
+  /** Reported by. */
+  by: string;
+
+  /** Reason. */
+  reason: string;
+};
+
 /** SurveyEntity. */
 @Entity({
   name: 'survey',
@@ -57,4 +66,20 @@ export class SurveyEntity extends EntityBase {
     nullable: true,
   })
   report?: SurveyReportEntity;
+
+  /**
+   * Get reporter.
+   *
+   * @returns Reporter if reported, otherwise `null`.
+   */
+  getReporter(): SurveyReporter | null {
+    if (this.report?.reporter) {
+      return {
+        by: this.report.reporter.getFullName(),
+        reason: this.report.reason,
+      };
+    }
+
+    return null;
+  }
 }

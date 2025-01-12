@@ -1,6 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SurveyEntity, SurveyReportEntity } from '~/entities';
+import { RoleEntity, SurveyEntity, SurveyReportEntity, UserEntity } from '~/entities';
 
 /** Admin repository module. */
-export const AdminRepositoryModule = TypeOrmModule.forFeature([SurveyEntity, SurveyReportEntity]);
+export const AdminRepositoryModule = TypeOrmModule.forFeature([UserEntity, RoleEntity, SurveyEntity, SurveyReportEntity]);

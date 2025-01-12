@@ -55,7 +55,7 @@ export class SurveyApiController {
    * Create survey.
    *
    * @param req Request.
-   * @param surveyModel Body.
+   * @param surveyModel Survey model.
    *
    * @returns Created Survey.
    */
@@ -76,7 +76,7 @@ export class SurveyApiController {
    *
    * @param req Request.
    * @param surveyId Survey id.
-   * @param surveyModel Body.
+   * @param surveyModel Survey model.
    *
    * @returns Updated Survey.
    */

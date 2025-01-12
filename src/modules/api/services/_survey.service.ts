@@ -89,7 +89,7 @@ export class SurveyApiService {
   }
 
   /**
-   * Update a new survey.
+   * Update survey.
    *
    * @param user User.
    * @param surveyId Survey id.
@@ -115,7 +115,7 @@ export class SurveyApiService {
   }
 
   /**
-   * Delete a survey.
+   * Delete survey.
    *
    * @param user User.
    * @param surveyId Survey id.
@@ -130,7 +130,7 @@ export class SurveyApiService {
     }
 
     const removedSurvey = await this.surveyRepository.softRemove(survey);
-    this.logger.debug('Survey deleted', { survey });
+    this.logger.debug('Survey deleted', { survey: removedSurvey });
 
     return removedSurvey;
   }

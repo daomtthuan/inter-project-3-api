@@ -21,8 +21,6 @@ export class SurveyAdminController {
   /**
    * Get survey list.
    *
-   * @param req Request.
-   *
    * @returns List of surveys.
    */
   @Get('list')

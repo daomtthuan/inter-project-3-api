@@ -87,8 +87,12 @@ export class UserEntity extends EntityBase {
   })
   surveyReports?: SurveyReportEntity[];
 
-  /** @returns Full name of the user. */
-  get fullName(): string {
+  /**
+   * Get full name of the user.
+   *
+   * @returns Full name of the user.
+   */
+  getFullName(): string {
     return `${this.firstName ?? ''} ${this.lastName ?? ''}`.replace(/\s+/g, ' ').trim();
   }
 }

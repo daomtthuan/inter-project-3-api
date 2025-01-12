@@ -2,7 +2,7 @@ import { NotImplementedException } from '@nestjs/common';
 import { IsBoolean, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
 
 import { ModelBase, ModelFactory } from '~/common/base/model';
-import { SurveyEntity } from '~/entities';
+import { SurveyEntity, SurveyReporter } from '~/entities';
 import { ObjectUtils } from '~/utils/core';
 
 /** Survey. */
@@ -27,15 +27,7 @@ class Survey extends ModelBase {
   owner?: string;
 
   /** Is reported. */
-  reported?:
-    | boolean
-    | {
-        /** Reported by. */
-        by: string;
-
-        /** Reason. */
-        reason: string;
-      };
+  reported?: boolean | SurveyReporter;
 }
 
 /** SurveyModel. */
@@ -44,20 +36,13 @@ export class SurveyModel extends ModelFactory(Survey, {
     if (data instanceof SurveyEntity) {
       return {
         ...ObjectUtils.pickProperties(data, ['id', 'rating', 'feedback', 'createdAt', 'updatedAt']),
-        owner: data.isAnonymous ? undefined : data.owner.fullName,
+        owner: data.isAnonymous ? undefined : data.owner.getFullName(),
         reported: (() => {
           if (!data.report) {
             return false;
           }
 
-          if (data.report.reporter) {
-            return {
-              by: data.report.reporter.fullName,
-              reason: data.report.reason,
-            };
-          }
-
-          return true;
+          return data.getReporter() ?? true;
         })(),
       };
     }
