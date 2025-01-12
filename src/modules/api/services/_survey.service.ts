@@ -162,6 +162,7 @@ export class SurveyApiService {
         userId: user.id,
         createdAt: Between(startOfDay, endOfDay),
       },
+      withDeleted: true,
     });
   }
 
@@ -182,6 +183,7 @@ export class SurveyApiService {
         userId: user.id,
         createdAt: Between(startOfMonth, endOfMonth),
       },
+      withDeleted: true,
     });
   }
 }
