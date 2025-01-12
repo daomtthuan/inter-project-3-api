@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Session, User } from '../entities';
-import * as controllers from './controllers';
+import { ProfileAuthController, TokenAuthController } from './controllers';
 import { JwtAuthModule } from './modules/jwt';
+import { AuthRepositoryModule } from './modules/repository';
 import { TokenAuthService, UserAuthService } from './services';
 import { AccessTokenStrategy, LocalStrategy, RefreshTokenStrategy } from './strategies';
 
 /** Auth module. */
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Session]), PassportModule, JwtAuthModule],
+  imports: [AuthRepositoryModule, PassportModule, JwtAuthModule],
   providers: [TokenAuthService, UserAuthService, LocalStrategy, AccessTokenStrategy, RefreshTokenStrategy],
-  controllers: Object.values(controllers),
+  controllers: [TokenAuthController, ProfileAuthController],
 })
 export class AuthModule {}

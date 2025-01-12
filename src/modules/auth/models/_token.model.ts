@@ -1,21 +1,19 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-/** Interface for TokenModel. */
-export interface ITokenModel {
+import { ModelFactory } from '~/common/base/model';
+
+/** Token. */
+class Token {
   /** Access token. */
-  accessToken: string;
-
-  /** Refresh token. */
-  refreshToken: string;
-}
-
-/** TokenModel. */
-export class TokenModel implements ITokenModel {
   @IsString()
   @IsNotEmpty()
   accessToken!: string;
 
+  /** Refresh token. */
   @IsString()
   @IsNotEmpty()
   refreshToken!: string;
 }
+
+/** TokenModel. */
+export class TokenModel extends ModelFactory(Token) {}

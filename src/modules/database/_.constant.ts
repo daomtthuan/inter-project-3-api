@@ -2,11 +2,15 @@ import { Table, TableColumnOptions } from 'typeorm';
 
 /** Database types. */
 export const TYPE = {
-  TEXT: 'TEXT',
-  REAL: 'REAL',
-  NUMERIC: 'NUMERIC',
-  INTEGER: 'INTEGER',
-  BLOB: 'BLOB',
+  NUMBER: {
+    INT: 'integer',
+    BIGINT: 'bigint',
+  },
+  STRING: {
+    VARCHAR: 'varchar',
+  },
+  DATETIME: 'datetime',
+  BOOLEAN: 'boolean',
 };
 
 /** Migrations table name. */
@@ -15,18 +19,18 @@ export const MIGRATIONS_TABLE = new Table({
   columns: [
     {
       name: 'id',
-      type: TYPE.INTEGER,
+      type: TYPE.NUMBER.INT,
       isPrimary: true,
       isGenerated: true,
       generationStrategy: 'increment',
     },
     {
       name: 'timestamp',
-      type: TYPE.NUMERIC,
+      type: TYPE.NUMBER.BIGINT,
     },
     {
       name: 'name',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
     },
   ],
 });
@@ -34,7 +38,7 @@ export const MIGRATIONS_TABLE = new Table({
 /** Identifier column. */
 export const IDENTIFIER_COLUMN: TableColumnOptions = {
   name: 'id',
-  type: TYPE.TEXT,
+  type: TYPE.STRING.VARCHAR,
   isPrimary: true,
   isGenerated: true,
   generationStrategy: 'uuid',
@@ -44,17 +48,24 @@ export const IDENTIFIER_COLUMN: TableColumnOptions = {
 export const TRACKABLE_COLUMNS: TableColumnOptions[] = [
   {
     name: 'createdAt',
-    type: TYPE.NUMERIC,
+    type: TYPE.DATETIME,
     isNullable: false,
     default: 'datetime()',
   },
   {
     name: 'updatedAt',
-    type: TYPE.NUMERIC,
+    type: TYPE.DATETIME,
     isNullable: false,
     default: 'datetime()',
   },
 ];
+
+/** Soft delete column. */
+export const SOFT_DELETE_COLUMN: TableColumnOptions = {
+  name: 'deletedAt',
+  type: TYPE.DATETIME,
+  isNullable: true,
+};
 
 /** Role table. */
 export const ROLE_TABLE = new Table({
@@ -63,15 +74,16 @@ export const ROLE_TABLE = new Table({
     IDENTIFIER_COLUMN,
     {
       name: 'name',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isUnique: true,
     },
     {
       name: 'description',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isNullable: true,
     },
     ...TRACKABLE_COLUMNS,
+    SOFT_DELETE_COLUMN,
   ],
 });
 
@@ -82,32 +94,33 @@ export const USER_TABLE = new Table({
     IDENTIFIER_COLUMN,
     {
       name: 'username',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isUnique: true,
       isNullable: false,
     },
     {
       name: 'password',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isNullable: false,
     },
     {
       name: 'firstName',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isNullable: false,
     },
     {
       name: 'lastName',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isNullable: true,
     },
     {
       name: 'isActive',
-      type: TYPE.NUMERIC,
+      type: TYPE.BOOLEAN,
       default: true,
       isNullable: false,
     },
     ...TRACKABLE_COLUMNS,
+    SOFT_DELETE_COLUMN,
   ],
 });
 
@@ -117,12 +130,12 @@ export const USER_ROLE_TABLE = new Table({
   columns: [
     {
       name: 'userId',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isPrimary: true,
     },
     {
       name: 'roleId',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
       isPrimary: true,
     },
     ...TRACKABLE_COLUMNS,
@@ -145,14 +158,15 @@ export const USER_ROLE_TABLE = new Table({
 export const SESSION_TABLE = new Table({
   name: 'session',
   columns: [
+    IDENTIFIER_COLUMN,
     {
       name: 'userId',
-      type: TYPE.TEXT,
-      isPrimary: true,
+      type: TYPE.STRING.VARCHAR,
+      isUnique: true,
     },
     {
       name: 'refreshToken',
-      type: TYPE.TEXT,
+      type: TYPE.STRING.VARCHAR,
     },
     ...TRACKABLE_COLUMNS,
   ],
@@ -165,5 +179,35 @@ export const SESSION_TABLE = new Table({
   ],
 });
 
+/** Survey table. */
+export const SURVEY_TABLE = new Table({
+  name: 'survey',
+  columns: [
+    IDENTIFIER_COLUMN,
+    {
+      name: 'userId',
+      type: TYPE.STRING.VARCHAR,
+    },
+    {
+      name: 'rating',
+      type: TYPE.NUMBER.INT,
+      isNullable: false,
+    },
+    {
+      name: 'feedback',
+      type: TYPE.STRING.VARCHAR,
+      isNullable: true,
+    },
+    {
+      name: 'isAnonymous',
+      type: TYPE.BOOLEAN,
+      default: false,
+      isNullable: false,
+    },
+    ...TRACKABLE_COLUMNS,
+    SOFT_DELETE_COLUMN,
+  ],
+});
+
 /** Database tables. */
-export const DATABASE_TABLES = [ROLE_TABLE, USER_TABLE, USER_ROLE_TABLE, SESSION_TABLE];
+export const DATABASE_TABLES = [ROLE_TABLE, USER_TABLE, USER_ROLE_TABLE, SESSION_TABLE, SURVEY_TABLE];

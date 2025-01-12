@@ -10,8 +10,8 @@
       "request": "launch",
       "console": "integratedTerminal",
       "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "yarn",
-      "runtimeArgs": ["dev"]
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"]
     }
   ]
 }

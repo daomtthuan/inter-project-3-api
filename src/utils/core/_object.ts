@@ -1,23 +1,17 @@
-import { plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
-import { Class } from 'type-fest';
-
+/** Utility class for object operations. */
 export class ObjectUtils {
   /**
-   * Create an instance of a class.
+   * Filter object properties.
    *
-   * @param cls Class.
-   * @param data Plain object.
+   * @param obj Object.
+   * @param predicate Predicate.
    *
-   * @returns Instance.
+   * @returns Filtered object.
    */
-  static async createInstance<TData, TType extends object>(cls: Class<TType>, data: TData): Promise<TType | null> {
-    const instance = plainToInstance(cls, data);
-    const errors = await validate(instance);
-    if (errors.length) {
-      return null;
-    }
-
-    return instance;
+  static filterProperties<TType extends object, TTransform extends object>(
+    obj: TType,
+    predicate: (key: keyof TType, value: TType[keyof TType]) => boolean,
+  ): TTransform {
+    return Object.fromEntries(Object.entries(obj).filter(([key, value]) => predicate(key as keyof TType, value))) as TTransform;
   }
 }

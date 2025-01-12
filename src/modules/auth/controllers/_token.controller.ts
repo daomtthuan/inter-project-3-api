@@ -1,6 +1,6 @@
-import { Post, Request, UnauthorizedException } from '@nestjs/common';
+import { Post, Req, UnauthorizedException } from '@nestjs/common';
 
-import { RequestTypeWithUser } from '~/types/http';
+import { RequestTypeWithUser } from '~/common/types/http';
 
 import { Auth, AuthController, LocalAuth } from '../decorators';
 import { TokenModel } from '../models';
@@ -23,7 +23,7 @@ export class TokenAuthController {
    */
   @LocalAuth()
   @Post()
-  async getAccessToken(@Request() req: RequestTypeWithUser): Promise<TokenModel> {
+  async getAccessToken(@Req() req: RequestTypeWithUser): Promise<TokenModel> {
     const token = await this.tokenAuthService.createToken(req);
     if (!token) {
       throw new UnauthorizedException();
@@ -41,7 +41,7 @@ export class TokenAuthController {
    */
   @Auth('refresh')
   @Post('refresh')
-  async refreshToken(@Request() req: RequestTypeWithUser): Promise<TokenModel> {
+  async refreshToken(@Req() req: RequestTypeWithUser): Promise<TokenModel> {
     const token = await this.tokenAuthService.createToken(req);
     if (!token) {
       throw new UnauthorizedException();

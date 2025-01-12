@@ -1,4 +1,4 @@
-import { User } from '~/modules/entities';
+import { UserEntity } from '~/entities';
 
 /**
  * Request type.
@@ -14,7 +14,7 @@ export type RequestType<TUser = undefined, TAuthInfo = undefined> = Express.Requ
   authInfo: TAuthInfo;
 
   /** Request headers. */
-  headers?: Record<string, unknown>;
+  headers?: Record<string, unknown> | undefined;
 };
 
 /**
@@ -22,4 +22,4 @@ export type RequestType<TUser = undefined, TAuthInfo = undefined> = Express.Requ
  *
  * @template TAuthInfo Authentication information type.
  */
-export type RequestTypeWithUser = RequestType<User, Record<string, unknown>>;
+export type RequestTypeWithUser = RequestType<UserEntity, Record<string, unknown>>;

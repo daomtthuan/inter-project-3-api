@@ -88,6 +88,12 @@
       "fileExtensions": ["constant.ts"]
     },
     {
+      "name": "exception",
+      "base": "typescript",
+      "color": "#EBA73B",
+      "fileExtensions": ["exception.ts"]
+    },
+    {
       "name": "ts-type",
       "base": "typescript-def",
       "color": "#428ACE",
@@ -160,6 +166,12 @@
       "base": "class",
       "color": "#9FA971",
       "folderNames": ["repository"]
+    },
+    {
+      "name": "exception",
+      "base": "error",
+      "color": "#EBA73B",
+      "folderNames": ["exceptions"]
     }
   ],
   "search.exclude": {

@@ -1,6 +1,6 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Session, User } from '~/modules/entities';
+import { SessionEntity, UserEntity } from '~/entities';
 
 /** Auth repository module. */
-export const AuthRepositoryModule = TypeOrmModule.forFeature([User, Session]);
+export const AuthRepositoryModule = TypeOrmModule.forFeature([UserEntity, SessionEntity]);

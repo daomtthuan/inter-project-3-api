@@ -1,16 +1,16 @@
 import { Logger } from '@nestjs/common';
 import { registerAs } from '@nestjs/config';
-import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions.js';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+import * as entities from '~/entities';
 import { EnvUtils, PathUtils } from '~/utils/core';
 
-import * as entities from '../entities';
 import { MIGRATIONS_TABLE } from './_.constant';
 import { DatabaseModule } from './_.module';
 import * as migrations from './migrations';
 
 /** Database factory. */
-export const DatabaseFactory = registerAs('DATABASE', (): SqliteConnectionOptions => {
+export const DatabaseFactory = registerAs('DATABASE', (): TypeOrmModuleOptions => {
   const logger = new Logger(DatabaseModule.module.name);
 
   const database = PathUtils.resolveDist(EnvUtils.getString('DATABASE_DATA_DIR'), EnvUtils.getString('DATABASE_NAME'));
@@ -27,5 +27,6 @@ export const DatabaseFactory = registerAs('DATABASE', (): SqliteConnectionOption
     migrationsTableName: MIGRATIONS_TABLE.name,
     migrationsRun: true,
     logging: true,
+    synchronize: true,
   };
 });

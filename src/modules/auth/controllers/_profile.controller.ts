@@ -1,10 +1,9 @@
-import { Get, Request } from '@nestjs/common';
-import { Except } from 'type-fest';
+import { Get, Req } from '@nestjs/common';
 
-import { User } from '~/modules/entities';
-import { RequestTypeWithUser } from '~/types/http';
+import { RequestTypeWithUser } from '~/common/types/http';
 
 import { Auth, AuthController } from '../decorators';
+import { ProfileModel } from '../models';
 
 /** Auth controller. */
 @Auth()
@@ -18,7 +17,7 @@ export class ProfileAuthController {
    * @returns User profile.
    */
   @Get()
-  async getProfile(@Request() { user }: RequestTypeWithUser): Promise<Except<User, 'password'>> {
-    return user;
+  async getProfile(@Req() { user }: RequestTypeWithUser): Promise<ProfileModel> {
+    return ProfileModel.create(user);
   }
 }

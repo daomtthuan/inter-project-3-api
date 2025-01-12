@@ -2,8 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { User } from '~/modules/entities';
-import { ObjectUtils } from '~/utils/core';
+import { UserEntity } from '~/entities';
 import { PasswordUtils } from '~/utils/secure';
 
 import { UserModel } from '../models';
@@ -16,44 +15,47 @@ export class UserAuthService {
 
   constructor(
     /** User repository. */
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
   ) {}
 
   /**
    * Validate user.
    *
-   * @param usernameDto Username.
-   * @param passwordDto Password.
+   * @param username Username.
+   * @param password Password.
    *
    * @returns `User` if valid, otherwise `null`.
    */
-  async validateUser(usernameDto: unknown, passwordDto: unknown): Promise<User | null> {
-    const userModel = await ObjectUtils.createInstance(UserModel, { username: usernameDto, password: passwordDto });
-    if (!userModel) {
+  async validateUser(username: unknown, password: unknown): Promise<UserEntity | null> {
+    const user = await UserModel.validate({
+      username,
+      password,
+    });
+    if (!user) {
       this.logger.debug('Invalid user model');
       return null;
     }
 
-    const user = await this.userRepository.findOne({
+    const existedUser = await this.userRepository.findOne({
       where: {
-        username: userModel.username,
+        username: user.username,
         isActive: true,
       },
       relations: {
         roles: true,
       },
     });
-    if (!user) {
+    if (!existedUser) {
       this.logger.debug('User not found');
       return null;
     }
 
-    if (!(await PasswordUtils.verify(userModel.password, user.password))) {
+    if (!(await PasswordUtils.verify(user.password, existedUser.password))) {
       this.logger.debug('Invalid password');
       return null;
     }
 
-    return user;
+    return existedUser;
   }
 }

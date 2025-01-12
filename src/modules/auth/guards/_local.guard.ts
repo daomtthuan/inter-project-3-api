@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard, IAuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 
-import { User } from '~/modules/entities';
+import { UserEntity } from '~/entities';
 
 import { LOCAL_AUTH_GUARD, PUBLIC_GUARD } from '../constants';
 
@@ -30,7 +30,7 @@ export class LocalGuard extends AuthGuard(LOCAL_AUTH_GUARD) implements IAuthGuar
     return super.canActivate(context);
   }
 
-  override handleRequest<TUser extends User>(error: Error, user: TUser): TUser {
+  override handleRequest<TUser extends UserEntity>(error: Error, user: TUser): TUser {
     if (error) {
       throw error;
     }

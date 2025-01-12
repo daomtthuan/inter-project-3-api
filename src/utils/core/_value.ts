@@ -1,4 +1,4 @@
-import { Nullish } from '~/types/core';
+import { Nullish } from '~/common/types/core';
 
 /** Utility class for value operations. */
 export class ValueUtils {

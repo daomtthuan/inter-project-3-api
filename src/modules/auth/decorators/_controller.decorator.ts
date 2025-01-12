@@ -1,4 +1,4 @@
-import { applyDecorators, ClassSerializerInterceptor, Controller, UseInterceptors } from '@nestjs/common';
+import { applyDecorators, Controller } from '@nestjs/common';
 
 import { AUTH_CONTROLLER_PREFIX } from '../constants';
 
@@ -7,5 +7,4 @@ import { AUTH_CONTROLLER_PREFIX } from '../constants';
  *
  * @param prefix Controller prefix.
  */
-export const AuthController = (prefix: string) =>
-  applyDecorators(UseInterceptors(ClassSerializerInterceptor), Controller(`${AUTH_CONTROLLER_PREFIX}/${prefix}`));
+export const AuthController = (prefix: string) => applyDecorators(Controller(`${AUTH_CONTROLLER_PREFIX}/${prefix}`));

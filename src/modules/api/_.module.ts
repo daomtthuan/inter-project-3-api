@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
 
-import { SurveyApiModule } from './modules/survey';
+import { SurveyApiController } from './controllers';
+import { ApiRepositoryModule } from './modules/repository';
+import { ApiService, SurveyApiService } from './services';
 
+/** Api module. */
 @Module({
-  imports: [SurveyApiModule],
+  imports: [ApiRepositoryModule],
+  providers: [ApiService, SurveyApiService],
+  controllers: [SurveyApiController],
 })
 export class ApiModule {}

@@ -1,27 +1,23 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
 
-/** Interface for PayloadModel. */
-export interface IPayloadModel {
+import { ModelFactory } from '~/common/base/model';
+
+/** Payload. */
+class Payload {
   /** Type of token. */
-  type: 'access' | 'refresh';
-
-  /** Subject claim (User id) */
-  sub: string;
-
-  /** Username. */
-  username: string;
-}
-
-/** PayloadModel. */
-export class PayloadModel implements IPayloadModel {
   @IsEnum(['access', 'refresh'])
   type!: 'access' | 'refresh';
 
+  /** Subject claim (User id) */
   @IsString()
   @IsNotEmpty()
   sub!: string;
 
+  /** Username. */
   @IsString()
   @IsNotEmpty()
   username!: string;
 }
+
+/** PayloadModel. */
+export class PayloadModel extends ModelFactory(Payload) {}
